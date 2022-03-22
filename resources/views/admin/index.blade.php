@@ -7,6 +7,8 @@
 @stop
 
 @section('content')
+    @livewire('categori')
+
     @if (session('info'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <h4><strong>{{session('info')}}</strong></h4>

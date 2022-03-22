@@ -22,10 +22,12 @@
                         {{$comment->message}}
                         <br>
                             <div class="container d-flex">
-                                @if (auth()->user()->id==$comment->user_id)
-
-                                     <a data-bs-toggle="modal" data-bs-target="#exampleModal{{$comment->id}}" class="btn btn-primary m-1" href="{{route('admin.post.edit',$post)}}">Editar</a>
-                                @endif 
+                                @isset(auth()->user()->id)
+                                    @if((auth()->user()->id)==$comment->user_id)
+                                        <a data-bs-toggle="modal" data-bs-target="#exampleModal{{$comment->id}}" class="btn btn-primary m-1" href="{{route('admin.post.edit',$post)}}">Editar</a>
+                                    @endif                                   
+                                @endisset
+ 
                                 <!-- Modal -->
                                     <div class="modal fade" id="exampleModal{{$comment->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
@@ -43,13 +45,16 @@
                                         </div>
                                     </div>
                                     {{--  --}}
-                                @if (auth()->user()->id==$comment->user_id || auth()->user()->id==$post->user_id)
-                                    <form action="{{route('post.comment.destroy',$comment)}}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-danger m-1">Eliminar</button>
-                                    </form>
-                                @endif
+                                @isset(auth()->user()->id)
+                                    @if (auth()->user()->id==$comment->user_id || auth()->user()->id==$post->user_id)
+                                        <form action="{{route('post.comment.destroy',$comment)}}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-danger m-1">Eliminar</button>
+                                        </form>
+                                    @endif                                    
+                                @endisset
+
                             </div>                               
                          
                     </div>
