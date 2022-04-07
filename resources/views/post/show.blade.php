@@ -12,7 +12,7 @@
             </article>
         </div>
     </div>
-
+    
     <div class="container mt-4" >
         <div class="col-md-11 mx-auto rounded-3" style="background-color:#F5F5F5 ">
             @foreach ($comments as $comment)
@@ -21,51 +21,57 @@
                         <br>
                         {{$comment->message}}
                         <br>
-                            <div class="container d-flex">
-                                @isset(auth()->user()->id)
-                                    @if((auth()->user()->id)==$comment->user_id)
-                                        <a data-bs-toggle="modal" data-bs-target="#exampleModal{{$comment->id}}" class="btn btn-primary m-1" href="{{route('admin.post.edit',$post)}}">Editar</a>
-                                    @endif                                   
-                                @endisset
- 
-                                <!-- Modal -->
-                                    <div class="modal fade" id="exampleModal{{$comment->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-body">
-                                                    {!! Form::model($comment,['route'=>['post.comment.update',$comment],'autocomplete'=>'off','files'=>true,'method'=>'put']) !!}
-                                                        {!! Form::hidden('user_id', auth()->user()->id) !!} 
-                                                        {!! Form::hidden('post_id', $post->id) !!} 
-                                                        {!! Form::textarea('message', null, ['class'=>'mb-2 form-control','placeholder'=>'Ingrese un comentario']) !!}           
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                                        {!! Form::submit('Actualizar Comentario', ['class'=>'btn btn-primary']) !!}                                            
-                                                    {!! Form::close() !!}
-                                                </div>
+                        @auth
+                            
+                        <div class="container d-flex">
+                            @isset(auth()->user()->id)
+                                @if((auth()->user()->id)==$comment->user_id)
+                                    <a data-bs-toggle="modal" data-bs-target="#exampleModal{{$comment->id}}" class="btn btn-primary m-1" href="{{route('admin.post.edit',$post)}}">Editar</a>
+                                @endif                                   
+                            @endisset
+
+                            <!-- Modal -->
+                                <div class="modal fade" id="exampleModal{{$comment->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-body">
+                                                {!! Form::model($comment,['route'=>['post.comment.update',$comment],'autocomplete'=>'off','files'=>true,'method'=>'put']) !!}
+                                                    {!! Form::hidden('user_id', auth()->user()->id) !!} 
+                                                    {!! Form::hidden('post_id', $post->id) !!} 
+                                                    {!! Form::textarea('message', null, ['class'=>'mb-2 form-control','placeholder'=>'Ingrese un comentario']) !!}           
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                    {!! Form::submit('Actualizar Comentario', ['class'=>'btn btn-primary']) !!}                                            
+                                                {!! Form::close() !!}
                                             </div>
                                         </div>
                                     </div>
-                                    {{--  --}}
-                                @isset(auth()->user()->id)
-                                    @if (auth()->user()->id==$comment->user_id || auth()->user()->id==$post->user_id)
-                                        <form action="{{route('post.comment.destroy',$comment)}}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="btn btn-danger m-1">Eliminar</button>
-                                        </form>
-                                    @endif                                    
-                                @endisset
+                                </div>
+                                {{--  --}}
+                            @isset(auth()->user()->id)
+                                @if (auth()->user()->id==$comment->user_id || auth()->user()->id==$post->user_id)
+                                    <form action="{{route('post.comment.destroy',$comment)}}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-danger m-1">Eliminar</button>
+                                    </form>
+                                @endif                                    
+                            @endisset
 
-                            </div>                               
+                        </div>                               
+                        @endauth
                          
                     </div>
 
             @endforeach
+            @auth
+                
             {!! Form::open(['route'=>'post.comment.store','autocomplete'=>'off']) !!}
                 {!! Form::hidden('user_id', auth()->user()->id) !!} 
                 {!! Form::hidden('post_id', $post->id) !!} 
                 {!! Form::textarea('message', null, ['class'=>'mb-2 form-control','placeholder'=>'Ingrese un comentario']) !!}           
                 {!! Form::submit('Publicar Comentario', ['class'=>'btn btn-primary']) !!}
             {!! Form::close() !!}
+            @endauth
 
         </div>
     </div>
